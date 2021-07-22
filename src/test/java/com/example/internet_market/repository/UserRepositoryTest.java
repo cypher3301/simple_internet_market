@@ -1,5 +1,6 @@
 package com.example.internet_market.repository;
 
+import com.example.internet_market.Utility;
 import com.example.internet_market.entity.User;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    User user = generateUser();
+    private final User user = new Utility().generateUser();
 
 
     @Test
@@ -49,15 +50,5 @@ public class UserRepositoryTest {
     void deleteUser() {
         userRepository.deleteById(user.getId());
         assert !userRepository.findById(user.getId()).isPresent();
-    }
-
-    private User generateUser() {
-        User user = new User();
-        user.setId(999_999_999L);
-        user.setName("abcdefghijklmnoprstuvwxyz");
-        user.setEmail("abcdefghijklmnoprstuvw@xyz.com");
-        user.setAddress("123, abcdefghijkl mnoprstuvwxyz");
-        user.setPhone("+123 (45) 678 90 00");
-        return user;
     }
 }
