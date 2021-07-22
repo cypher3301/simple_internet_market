@@ -1,16 +1,15 @@
 package com.example.internet_market.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserRegistrationException extends Exception{
+@EqualsAndHashCode(callSuper = false)
+public class UserRegistrationException extends MarketException{
     private String message;
-
+    private String fieldException;
+    private int codeError;
 
 }
