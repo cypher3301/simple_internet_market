@@ -13,21 +13,20 @@ import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class UserRegistrationServiceImpl implements UserRegistrationService {
     private UserRepository userRepository;
-    private BasketRepository basketRepository;
-    private UserRegistrationException userRegistrationException;
 
     @Override
-    public User saveUser(User user) throws UserRegistrationException {
+    public User registration(User user) throws UserRegistrationException {
         if (checkUser(user)) {
                 Basket basket = new Basket();
                 basket.setUser(user);
                 user.setBasket(basket);
                 user.setId((long) user.hashCode());
                 basket.setId(user.getId());
+                return sendUserWithBasketToDB(user);
         }
-
         return null;
     }
 
@@ -35,22 +34,23 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         return userRepository.save(user);
     }
 
+
     private boolean checkUser(User user) throws UserRegistrationException {
         if (user == null)
-            throw new UserRegistrationException("User cannot be null");
+            throw new UserRegistrationException("User cannot be null","user",1);
         if (user.getEmail() == null || user.getEmail().isEmpty())
-            throw new UserRegistrationException("Email cannot be empty");
+            throw new UserRegistrationException("Email cannot be empty","email",2);
         if (user.getAddress() == null || user.getAddress().isEmpty())
-            throw new UserRegistrationException("Address cannot be empty");
+            throw new UserRegistrationException("Address cannot be empty","address", 3);
         if (user.getName() == null || user.getName().isEmpty())
-            throw new UserRegistrationException("Name cannot be empty");
+            throw new UserRegistrationException("Name cannot be empty","name",4);
         if (user.getPhone() == null || user.getPhone().isEmpty())
-            throw new UserRegistrationException("Phone cannot be empty");
+            throw new UserRegistrationException("Phone cannot be empty","phone",5);
 
         if(!userRepository.existsByEmail(user.getEmail()))
-            throw new UserRegistrationException("Email is already exists");
+            throw new UserRegistrationException("Email is already exists","email",2);
         if(!userRepository.existsByPhone(user.getPhone()))
-            throw new UserRegistrationException("Phone is already exists");
+            throw new UserRegistrationException("Phone is already exists","phone",5);
         return true;
     }
 
