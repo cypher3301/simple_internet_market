@@ -7,7 +7,7 @@ package com.example.internet_market.service.impl;
 
 import com.example.internet_market.entity.Basket;
 import com.example.internet_market.entity.User;
-import com.example.internet_market.exception.UserRegistrationException;
+import com.example.internet_market.service.exception.UserRegistrationException;
 import com.example.internet_market.repository.UserRepository;
 import com.example.internet_market.service.UserRegistrationService;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,6 @@ import javax.transaction.Transactional;
  */
 @Service
 @AllArgsConstructor
-@Transactional
 public class UserRegistrationServiceImpl implements UserRegistrationService {
     private UserRepository userRepository;
 
@@ -33,7 +32,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
      *                                   or object fields is empty
      */
     @Override
-    public User registration(User user) throws UserRegistrationException {
+    @Transactional
+    public User register(User user) throws UserRegistrationException {
         if (checkUser(user)) {
             Basket basket = new Basket();
             basket.setUser(user);

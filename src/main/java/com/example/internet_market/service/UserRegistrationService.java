@@ -6,7 +6,7 @@
 package com.example.internet_market.service;
 
 import com.example.internet_market.entity.User;
-import com.example.internet_market.exception.UserRegistrationException;
+import com.example.internet_market.service.exception.UserRegistrationException;
 
 /**
  * This interface UserRegistrationService responsible for registration users
@@ -23,5 +23,5 @@ public interface UserRegistrationService {
      * @throws UserRegistrationException if the specified object null
      * or object fields is empty
      */
-    User registration(User user) throws UserRegistrationException;
+    User register(User user) throws UserRegistrationException;
 }
