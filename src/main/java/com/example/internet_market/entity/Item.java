@@ -15,6 +15,7 @@ public class Item {
     
     private String name;
     private Double cost;
+    private Integer count;
     private String description;
 
     @ManyToOne
