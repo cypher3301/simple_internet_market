@@ -3,6 +3,8 @@ package com.example.internet_market.service;
 import com.example.internet_market.Utility;
 import com.example.internet_market.entity.User;
 import com.example.internet_market.exception.UserRegistrationException;
+import com.example.internet_market.repository.BasketRepository;
+import com.example.internet_market.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class UserRegistrationServiceTest {
     @Autowired
     private UserRegistrationService userRegistrationService;
+    @Autowired
+    private BasketRepository basketRepository;
+    @Autowired
+    private UserRepository userRepository;
     private final User user = new Utility().generateUser();
 
     @Test
@@ -20,61 +26,29 @@ public class UserRegistrationServiceTest {
             userRegistrationService.registration(localUser);
         } catch (UserRegistrationException e) {
             assert e.getFieldException().equals("user");
+            System.out.println(e.toString());
             return;
         }
         assert false;
     }
 
     @Test
-    void registrationEmailNull() {
+    void registrationIdNullOrEmpty() {
         User localUser = user;
-        localUser.setEmail(null);
+        User userRegistered;
+        localUser.setId(null);
         try {
-            userRegistrationService.registration(localUser);
+            userRegistered = userRegistrationService.registration(localUser);
         } catch (UserRegistrationException e) {
-            assert e.getFieldException().equals("email");
+            System.out.println(e.toString());
+            assert false;
             return;
         }
-        assert false;
-    }
-
-    @Test
-    void registrationEmailEmpty() {
-        User localUser = user;
-        localUser.setEmail("");
-        try {
-            userRegistrationService.registration(localUser);
-        } catch (UserRegistrationException e) {
-            assert e.getFieldException().equals("email");
-            return;
-        }
-        assert false;
-    }
-
-    @Test
-    void registrationAddressNull() {
-        User localUser = user;
-        localUser.setAddress(null);
-        try {
-            userRegistrationService.registration(localUser);
-        } catch (UserRegistrationException e) {
-            assert e.getFieldException().equals("address");
-            return;
-        }
-        assert false;
-    }
-
-    @Test
-    void registrationAddressEmpty() {
-        User localUser = user;
-        localUser.setAddress("");
-        try {
-            userRegistrationService.registration(localUser);
-        } catch (UserRegistrationException e) {
-            assert e.getFieldException().equals("address");
-            return;
-        }
-        assert false;
+        assert userRegistered != null;
+        assert userRegistered.hashCode() == localUser.hashCode();
+        assert userRegistered.getId() == localUser.hashCode();
+        basketRepository.deleteById(userRegistered.getId());
+        userRepository.deleteById(userRegistered.getId());
     }
 
     @Test
@@ -85,6 +59,7 @@ public class UserRegistrationServiceTest {
             userRegistrationService.registration(localUser);
         } catch (UserRegistrationException e) {
             assert e.getFieldException().equals("name");
+            System.out.println(e.toString());
             return;
         }
         assert false;
@@ -98,6 +73,76 @@ public class UserRegistrationServiceTest {
             userRegistrationService.registration(localUser);
         } catch (UserRegistrationException e) {
             assert e.getFieldException().equals("name");
+            System.out.println(e.toString());
+            return;
+        }
+        assert false;
+    }
+
+    @Test
+    void registrationAddressNull() {
+        User localUser = user;
+        localUser.setAddress(null);
+        try {
+            userRegistrationService.registration(localUser);
+        } catch (UserRegistrationException e) {
+            assert e.getFieldException().equals("address");
+            System.out.println(e.toString());
+            return;
+        }
+        assert false;
+    }
+
+    @Test
+    void registrationAddressEmpty() {
+        User localUser = user;
+        localUser.setAddress("");
+        try {
+            userRegistrationService.registration(localUser);
+        } catch (UserRegistrationException e) {
+            assert e.getFieldException().equals("address");
+            System.out.println(e.toString());
+            return;
+        }
+        assert false;
+    }
+
+    @Test
+    void registrationEmailNull() {
+        User localUser = user;
+        localUser.setEmail(null);
+        try {
+            userRegistrationService.registration(localUser);
+        } catch (UserRegistrationException e) {
+            assert e.getFieldException().equals("email");
+            System.out.println(e.toString());
+            return;
+        }
+        assert false;
+    }
+
+    @Test
+    void registrationEmailEmpty() {
+        User localUser = user;
+        localUser.setEmail("");
+        try {
+            userRegistrationService.registration(localUser);
+        } catch (UserRegistrationException e) {
+            assert e.getFieldException().equals("email");
+            System.out.println(e.toString());
+            return;
+        }
+        assert false;
+    }
+
+    @Test
+    void registrationEmailExists() {
+        user.setPhone(user.getPhone().replace("1","2"));
+        try {
+            userRegistrationService.registration(user);
+        } catch (UserRegistrationException e) {
+            assert e.getFieldException().equals("email");
+            System.out.println(e.toString());
             return;
         }
         assert false;
@@ -111,6 +156,7 @@ public class UserRegistrationServiceTest {
             userRegistrationService.registration(localUser);
         } catch (UserRegistrationException e) {
             assert e.getFieldException().equals("phone");
+            System.out.println(e.toString());
             return;
         }
         assert false;
@@ -124,6 +170,21 @@ public class UserRegistrationServiceTest {
             userRegistrationService.registration(localUser);
         } catch (UserRegistrationException e) {
             assert e.getFieldException().equals("phone");
+            System.out.println(e.toString());
+            return;
+        }
+        assert false;
+    }
+
+    @Test
+    void registrationPhoneExists() {
+        User localUser = user;
+        localUser.setEmail("1"+user.getEmail());
+        try {
+            userRegistrationService.registration(localUser);
+        } catch (UserRegistrationException e) {
+            assert e.getFieldException().equals("phone");
+            System.out.println(e.toString());
             return;
         }
         assert false;
