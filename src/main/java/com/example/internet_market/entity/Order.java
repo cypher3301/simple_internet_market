@@ -15,6 +15,8 @@ public class Order {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private Long id;
 
+    private boolean cancel = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
